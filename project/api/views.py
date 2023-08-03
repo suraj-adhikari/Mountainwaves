@@ -1,14 +1,26 @@
 import json
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+import requests
 
 @csrf_exempt
 def post(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(data)
-                # TODO data
+            url=data['url']
+            method=data['method']
+            api_key=data['api_key']
+            data=data['data']
+            headers={
+                                'Authorization': f'Bearer {api_key}',
+                                'Content-Type':'application/json',
+                                # 'Host':'api.hubapi.com'
+
+                            }
+# we need to check this response
+            response = requests.request(method, url=url,headers=headers, data=data)
+            print(response)
             return JsonResponse(data,status=200,safe=False)
         except json.JSONDecodeError:
             return JsonResponse({'message': 'Invalid JSON data'}, status=400)
