@@ -9,18 +9,22 @@ def post(request):
         try:
             data = json.loads(request.body)
             url=data['url']
-            method=data['method']
             api_key=data['api_key']
-            data=data['data']
             headers={
                                 'Authorization': f'Bearer {api_key}',
                                 'Content-Type':'application/json',
                                 # 'Host':'api.hubapi.com'
 
                             }
-# we need to check this response
-            response = requests.request(method, url=url,headers=headers, data=data)
-            print(response)
+            method=data['method']
+            if method=='GET':
+                response = requests.request(method, url=url,headers=headers)
+                data= response.json()
+                print(response)
+            else:
+                data_payload=data['data']
+                response = requests.request(method, url=url,headers=headers, json=data_payload)
+                data= response.json()
             return JsonResponse(data,status=200,safe=False)
         except json.JSONDecodeError:
             return JsonResponse({'message': 'Invalid JSON data'}, status=400)
