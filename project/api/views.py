@@ -20,7 +20,10 @@ def post(request):
             if method=='GET':
                 response = requests.request(method, url=url,headers=headers)
                 data= response.json()
-                print(response)
+            elif method=='DELETE':
+                response = requests.request(method, url=url,headers=headers)
+                data= response.json()
+                # return JsonResponse({'message':f'Your data is delete from hubspot : {response.status_code}'})
             else:
                 data_payload=data['data']
                 response = requests.request(method, url=url,headers=headers, json=data_payload)
